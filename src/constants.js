@@ -11,7 +11,7 @@ const backgroundColor = "#212842",
       foregroundColor = "#ffd696",
       lineWidth = 0.01;
 
-const fishtailSize = 1.0;
+const fishtailSize = 1.25;
 
 const equatorSubdivisions = 50;
 

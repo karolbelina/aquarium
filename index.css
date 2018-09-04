@@ -1,7 +1,11 @@
-body {
+html, body {
 	margin: 0;
+	overflow: hidden;
+	height: 100%;
 }
 
 #main {
 	display: block;
+	width: 100%;
+	height: 100%;
 }
