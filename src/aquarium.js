@@ -16,17 +16,12 @@ class Boid {
 
 function update() {
     for(let boid of boids) {
-        const cohesionVector = Vector.multiply(cohesion(boid), cohesionWeight);
-        const separationVector = Vector.multiply(separation(boid), separationWeight);
-        const alignmentVector = Vector.multiply(alignment(boid), alignmentWeight);
-        const centerVector = Vector.multiply(center(boid), centerWeight);
-
         boid.newVelocity = boid.velocity.copy();
 
-        boid.newVelocity = Vector.add(boid.newVelocity, cohesionVector);
-        boid.newVelocity = Vector.add(boid.newVelocity, separationVector);
-        boid.newVelocity = Vector.add(boid.newVelocity, alignmentVector);
-        boid.newVelocity = Vector.add(boid.newVelocity, centerVector);
+        cohesion(boid);
+        separation(boid);
+        alignment(boid);
+        center(boid);
         limit(boid);
 
         boid.newPosition = Vector.add(boid.position, boid.newVelocity);
@@ -44,8 +39,8 @@ function update() {
 }
 
 function cohesion(boid) {
-    let average = new Vector(0, 0, 0);
-    let N = 0;
+    let average = new Vector(0, 0, 0),
+        N = 0;
 
     for(let b of boids) {
         if(b !== boid) {
@@ -57,11 +52,10 @@ function cohesion(boid) {
     }
 
     if(N > 0) {
-        average = Vector.divide(average, N);
-        return Vector.subtract(average, boid.position);
+        average = Vector.subtract(Vector.divide(average, N), boid.position);
     }
 
-    return average;
+    boid.newVelocity = Vector.add(boid.newVelocity, Vector.multiply(average, cohesionWeight));
 }
 
 function separation(boid) {
@@ -76,12 +70,12 @@ function separation(boid) {
         }
     }
 
-    return c;
+    boid.newVelocity = Vector.add(boid.newVelocity, Vector.multiply(c, separationWeight));
 }
 
 function alignment(boid) {
-    let average = new Vector(0, 0, 0);
-    let N = 0;
+    let average = new Vector(0, 0, 0),
+        N = 0;
 
     for(let b of boids) {
         if(b !== boid) {
@@ -93,17 +87,22 @@ function alignment(boid) {
     }
 
     if(N > 0) {
-        average = Vector.divide(average, N);
-        return Vector.subtract(average, boid.velocity);
+        average = Vector.subtract(Vector.divide(average, N), boid.velocity);
     }
 
-    return average;
+    boid.newVelocity = Vector.add(boid.newVelocity, Vector.multiply(average, alignmentWeight));
 }
 
 function center(boid) {
     const center = new Vector(0, 0, 0);
 
-    return Vector.subtract(center, boid.position);
+    boid.newVelocity = Vector.add(boid.newVelocity, Vector.multiply(Vector.subtract(center, boid.position), centerWeight));
+}
+
+function limit(boid) {
+    if(boid.newVelocity.magnitude() > speedLimit) {
+        boid.newVelocity = Vector.multiply(Vector.divide(boid.newVelocity, boid.newVelocity.magnitude()), speedLimit);
+    }
 }
 
 function bound(boid) {
@@ -169,12 +168,6 @@ function bound(boid) {
     } while(collisionDetected);
 }
 
-function limit(boid) {
-    if(boid.newVelocity.magnitude() > speedLimit) {
-        boid.newVelocity = Vector.multiply(Vector.divide(boid.newVelocity, boid.newVelocity.magnitude()), speedLimit);
-    }
-}
-
 
 
 
@@ -183,7 +176,7 @@ function init() {
         let vx = (Math.random() * 2 - 1) * 0.02,
             vy = (Math.random() * 2 - 1) * 0.02,
             vz = (Math.random() * 2 - 1) * 0.02,
-            radius = Math.random() * 0.005 + 0.01;
+            radius = minFishSize + Math.random() * (maxFishSize - minFishSize);
 
         let position = new Vector(0, 0, 0);
         let velocity = new Vector(vx, vy, vz);
