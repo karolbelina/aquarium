@@ -1,9 +1,9 @@
 function resize() {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	canvas.width = document.documentElement.clientWidth;
+	canvas.height = document.documentElement.clientHeight;
 
-	let xRadius = 2 / (window.innerWidth * aquariumScreenCoverage),
-		yRadius = 2 / (window.innerHeight * aquariumScreenCoverage);
+	let xRadius = 2 / (canvas.width * aquariumScreenCoverage),
+		yRadius = 2 / (canvas.height * aquariumScreenCoverage);
 
 	camera.radius = Math.max(xRadius, yRadius);
 }
