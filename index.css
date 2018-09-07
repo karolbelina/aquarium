@@ -1,12 +1,16 @@
 html, body {
 	margin: 0;
 	overflow: hidden;
-	/*width: 100%;
-	height: 100%;*/
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	min-height: 100%;
 }
 
 #main {
-	/*display: block;*/
-	/*width: 100%;
-	height: 100%;*/
+	display: block;
+	width: 100%;
+	height: 100%;
 }

@@ -1,6 +1,6 @@
 function resize() {
-	canvas.width = document.documentElement.clientWidth;
-	canvas.height = document.documentElement.clientHeight;
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 
 	let xRadius = 2 / (canvas.width * aquariumScreenCoverage),
 		yRadius = 2 / (canvas.height * aquariumScreenCoverage);
